@@ -1,0 +1,20 @@
+[Unit]
+Description=GitHub OSINT Monitor check for %i
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/github-osint-monitor
+# EnvironmentFile sets GITHUB_TOKEN, SLACK_WEBHOOK_URL, SMTP_USER, SMTP_PASS
+# as process environment variables -- monitor.py reads them itself via
+# os.environ.get(...), so they don't need to be (and shouldn't be) repeated
+# as command-line flags here.
+EnvironmentFile=/opt/github-osint-monitor/.env
+ExecStart=/opt/github-osint-monitor/venv/bin/python3 /opt/github-osint-monitor/monitor.py \
+    --repo ${REPO} \
+    --once \
+    --state-file /opt/github-osint-monitor/state/%i.json \
+    --dashboard /opt/github-osint-monitor/dashboards/%i.html
+StandardOutput=append:/var/log/github-osint-monitor/%i.log
+StandardError=append:/var/log/github-osint-monitor/%i.log

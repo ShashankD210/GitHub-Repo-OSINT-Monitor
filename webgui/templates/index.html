@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GitHub OSINT Monitor{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1>GitHub OSINT Monitor</h1>
+        </div>
+        <div class="nav-actions">
+            <button id="fetchAllReposBtn" class="btn btn-secondary">Fetch All My Repos</button>
+            <button id="runAllBtn" class="btn btn-primary">Run All</button>
+            <button id="loginBtn" class="btn btn-secondary">Login</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="repos-grid" id="reposGrid">
+            {% for repo in repos %}
+            <div class="repo-card" data-repo="{{ repo }}">
+                <div class="repo-header">
+                    <h2>{{ repo }}</h2>
+                    <span class="repo-status status-idle" id="status-{{ repo | replace('/', '-') }}">Idle</span>
+                </div>
+                <div class="repo-body">
+                    <div class="metrics" id="metrics-{{ repo | replace('/', '-') }}">
+                        <div class="metric">
+                            <span class="metric-label">Stars</span>
+                            <span class="metric-value" id="stars-{{ repo | replace('/', '-') }}">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Forks</span>
+                            <span class="metric-value" id="forks-{{ repo | replace('/', '-') }}">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Watchers</span>
+                            <span class="metric-value" id="watchers-{{ repo | replace('/', '-') }}">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Issues</span>
+                            <span class="metric-value" id="issues-{{ repo | replace('/', '-') }}">-</span>
+                        </div>
+                    </div>
+                    <div class="repo-actions">
+                        <button class="btn btn-sm btn-primary" onclick="runRepo('{{ repo }}')">Run Now</button>
+                        <a class="btn btn-sm btn-secondary" href="/dashboards/{{ repo | replace('/', '-') }}.html" target="_blank">Dashboard</a>
+                    </div>
+                    <div class="events" id="events-{{ repo | replace('/', '-') }}">
+                        <div class="no-data">Click "Run Now" to check for updates</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>GitHub Login</h2>
+            <p>Enter your GitHub Personal Access Token to increase rate limits.</p>
+            <input type="password" id="tokenInput" placeholder="ghp_..." />
+            <button class="btn btn-primary" onclick="submitLogin()">Save Token</button>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Fetch Repos Modal -->
+    <div id="fetchReposModal" class="modal">
+        <div class="modal-content wide">
+            <span class="close">&times;</span>
+            <h2>Your GitHub Repositories</h2>
+            <p>Select repositories to monitor. Click a row to toggle selection.</p>
+            <div class="repo-list" id="repoList">
+                <div class="no-data">Loading...</div>
+            </div>
+            <button class="btn btn-primary" onclick="addSelectedRepos()">Add Selected Repos</button>
+            <button class="btn btn-secondary" onclick="closeFetchModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

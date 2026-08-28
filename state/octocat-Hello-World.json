@@ -1,0 +1,16 @@
+{
+  "metrics": {
+    "stars": 3780,
+    "forks": 6579,
+    "watchers": 1735,
+    "open_issues": 7033
+  },
+  "last_commit_sha": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+  "last_commit_check": "2026-08-28T11:15:38Z",
+  "known_release_ids": [],
+  "known_contributors": [
+    "Spaceghost",
+    "octocat",
+    "Cameron423698"
+  ]
+}
